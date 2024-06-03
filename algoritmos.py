@@ -16,8 +16,45 @@ def fifo (num_frames, paginas, num_referencias):
     sem_falhas = []
     frames = [c for c in range(num_referencias + 3)]
 
-    if animation is True:
-        new_window(txt, capacity)
+    nova_janela(num_referencias)
+    for ii in frames:
+        if ii == 0:
+          registrar_falhas.append(0)
+          sem_falhas.append(0)
+          continue
+        s = set()
+        front = 0
+        indexes = []
+        falha_pagina = 0
+        falha = []
+        for i in range(num_frames):
+            if (len(s) < ii):
+                if (paginas[i] not in s):
+                    s.add(paginas[i])
+                    page_faults += 1
+                    falha.append(True)
+                    indexes.append(paginas[i])
+                else:
+                    falha.append(False)
+            else:
+                if (paginas[i] not in s):
+                    s.remove(indexes[front])
+                    s.add(paginas[i])
+                    indexes[front] = paginas[i]
+                    falha_pagina += 1
+                    falha.append(True)
+                    front+=1
+                    if(front>ii-1):
+                        front=0
+                else:
+                    falha.append(False)
+            if ii == num_referencias:
+                taxa_falha = float((falha_pagina) / num_frames)
+                dummy = indexes
+                anime(num_referencias, paginas[i], dummy, falha[i], taxa_falha, num_frames, frames, registrar_falhas, sem_falhas)
+                col += 1
+        registrar_falhas.append(falha_pagina)
+        sem_falhas.append(num_frames-falha_pagina)
     
 def nova_janela(capacity):
     global root
