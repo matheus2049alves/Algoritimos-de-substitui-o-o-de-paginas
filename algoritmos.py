@@ -11,6 +11,12 @@ def inicializar():
     taxa_falha = 0
 
 def fifo (num_frames, paginas, num_referencias):
+    global root
+    global linha 
+    global taxa_falha
+    global coluna
+    
+
     inicializar()
     registrar_falhas = []
     sem_falhas = []
@@ -50,9 +56,9 @@ def fifo (num_frames, paginas, num_referencias):
                     falha.append(False)
             if ii == num_referencias:
                 taxa_falha = float((falha_pagina) / num_frames)
-                dummy = indexes
-                anime(num_referencias, paginas[i], dummy, falha[i], taxa_falha, num_frames, frames, registrar_falhas, sem_falhas)
-                col += 1
+                imaginario = indexes
+                animar(num_referencias, paginas[i], imaginario, falha[i], taxa_falha, num_frames, frames, registrar_falhas, sem_falhas)
+                coluna += 1
         registrar_falhas.append(falha_pagina)
         sem_falhas.append(num_frames-falha_pagina)
     
@@ -61,6 +67,28 @@ def nova_janela(capacity):
     root = Tk()
     Basic_design(capacity)
     root.geometry("1600x660")
+
+#Função espaço vazio - Leo
+
+def espaco_vazio():
+    global root
+    global linha
+    global coluna
+    L = Label(root, text=" ", height="1", width="1")
+    L.grid(row=linha, column=coluna)
+    linha += 1
+
+#Função para quadradinhos - Leo
+
+def quadro(elemento):
+    global root
+    global linha
+    global coluna
+    L = Label(root, text=elemento, padx=20,pady=10,bd=1,fg="green", relief=SOLID,anchor="center")
+    L.configure(font=("Century Gothic", 12))
+    L.grid(row=linha, column=coluna)
+    linha += 1
+
 
 def configura_tabela(N):
     k=N
@@ -87,6 +115,38 @@ def Visualisar(tipo, num_frames, referencias):
     if tipo == "FIFO":
         fifo(nFrames, paginas, num_referencias)
 
+def animar(num_referencias, paginas, imaginario, falha, taxa_falha, num_frames, frames, registrar_falhas, sem_falhas):
+    global root
+    global linha
+    global coluna
+    row = 0
+    L = Label(root, text=paginas, pady=10, fg="green")
+    L.configure(font=("Century Gothic", 15))
+    L.grid(row=linha, column=coluna)
+    linha += 1
+    ls = []
+    ls = imaginario
+    for i in range(num_referencias - len(ls)):
+        espaco_vazio()
+
+    for i in reversed(ls):
+        quadro(i)
+
+    build_EmptyLabel()
+
+    if (falha == True):
+        falha = "Falha"
+        L1 = Label(root, text=teste_falha, fg="red")
+        L1.configure(font=("Century Gothic", 12, 'bold'))
+        L1.grid(row=linha, column=coluna - 1)
+        linha += 1
+    else:
+        teste_falha = "Sucesso"
+        L1 = Label(root, text=teste_falha, font="Questrial", fg="green")
+        L1.configure(font=("Century Gothic", 12, 'bold'))
+        L1.grid(row=row, column=col - 1)
+        row += 1
+    FrameRatio(taxa_falha, num_frames, frames, registrar_falhas, sem_falhas)
 
 
 
